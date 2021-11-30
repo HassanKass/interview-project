@@ -57,7 +57,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: postgres
-              name: postgres-passwords-v1
+              name: postgres-passwords
         - name: POD_IP
           valueFrom:
             fieldRef:
@@ -120,5 +120,5 @@ spec:
           valueFrom:
             secretKeyRef:
               key: postgres
-              name: postgres-passwords-v1
+              name: postgres-passwords
  
