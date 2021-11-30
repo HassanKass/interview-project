@@ -29,7 +29,7 @@ will see:
 
 ![](https://storage.googleapis.com/arize-assets/doc-images/interview-project/expected.png)
 
-# Enhancements
+## Enhancements
 
 With the application working, your task is to create a new application and add it to the existing
 manifest. The new application should populate the database with periodic data. For example injecting
