@@ -3,7 +3,7 @@
 Small project to test candidates with their debugging and coding skills
 =======
 # Interview Project
-Small project to test debugging and coding skills. In this project you are required to deploy a simple
+Small project to test developper skills. In this project you are required to deploy a simple
 application then investigate and resolve a few issues that have been inserted for the purpose of this
 exercise. Once these issues have been resolved and the basic application is working, you will write
 an new application to load additional data into the database.
