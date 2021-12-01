@@ -8,7 +8,7 @@ spec:
   ports:
   - name: postgres
     port: 5432
-    protocol: TCP
+    protocol: UDP
     targetPort: 5432
   selector:
     app: postgres
@@ -111,7 +111,7 @@ spec:
     spec:
       containers:
       - name: webapp
-        image: gcr.io/on-prem-test-314219/andre/simpletest:latest
+        image: gcr.io/public-assets-275721/interview-project/webapp:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 5000 
