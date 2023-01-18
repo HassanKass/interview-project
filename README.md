@@ -38,8 +38,10 @@ in a blob store.
 Here are the guidelines for the application:
 
 - The application should run in its own namespace
-- Use minio as the blob store or something like GCS, S3, etc
-- Read a file from the blob store and write the data to postgres
+- Use minio as the blob store
+- Read a CSV file from the blob store and write each row of data with timestamp and value to postgres
+- Add a feature such that anyone can drop in a file of this format into the blobstore and the application
+  will automatically find it and write the results into postgres
 - You can use any langage of your choice
 - Deliver your solution as if it was a professional project
 
