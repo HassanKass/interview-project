@@ -27,7 +27,7 @@ Once the application has been deployed and issues resolved, you should be able t
 Then from your browser navigate to `http://localhost:5000`. If everything is working as expected you
 will see 1 row of data:
 
-![](https://github.com/antanguay/interview-project/png/expected.png)
+![](https://github.com/antanguay/interview-project/blob/main/png/expected.png)
 
 ## Enhancements
 
