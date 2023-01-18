@@ -25,8 +25,6 @@ if (cur.rowcount == 0):
     cur.execute("INSERT INTO actuals(ts, value) VALUES ('%s', 55) RETURNING *;" % datetime.now())
     conn.commit()
 
-cur.execute("SELECT * FROM actuals;")
-
 app = Flask(__name__)
 
 @app.route('/')

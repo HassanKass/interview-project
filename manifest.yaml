@@ -7,8 +7,8 @@ metadata:
 spec:
   ports:
   - name: postgres
-    port: 5432
-    protocol: UDP
+    port: 5434
+    protocol: TCP
     targetPort: 5432
   selector:
     app: postgres
@@ -92,6 +92,7 @@ spec:
       resources:
         requests:
           storage: 1Gi
+      storageClassName: gold
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -111,7 +112,7 @@ spec:
     spec:
       containers:
       - name: webapp
-        image: gcr.io/public-assets-275721/interview-project/webapp:latest
+        image: gcr.io/on-prem-test-314219/interview-project/webapp:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 5000 
