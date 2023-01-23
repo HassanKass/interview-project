@@ -8,6 +8,10 @@ application then investigate and resolve a few issues that have been inserted fo
 exercise. The source files are provided. Once these issues have been resolved and the basic application
 is working, you will write an new application to load additional data into the database.
 
+## Getting Started
+
+You should first clone this repository and work from your local machine. Do not push your changes to
+this repository.
 
 ## Deployment
 
