@@ -4,9 +4,8 @@ Small project to test candidates with their debugging and coding skills
 =======
 # Interview Project
 Small project to test developper skills. In this project you are required to deploy a simple
-application then investigate and resolve a few issues that have been inserted for the purpose of this
-exercise. The source files are provided. Once these issues have been resolved and the basic application
-is working, you will write an new application to load additional data into the database.
+application then investigate and attempt to resolve a few issues that have been inserted for the
+purpose of this exercise. The source files are provided.
 
 ## Getting Started
 
@@ -33,11 +32,11 @@ will see 1 row of data:
 
 ![](https://github.com/antanguay/interview-project/blob/main/png/expected.png)
 
-## Enhancements
+## Optional Bonus Enhancements
 
-With the base application working, your task is to create a new application that interacts with the
-existing one. The new application should populate the database with data from a file located
-in a blob store.
+With the base application working, you can go for extra bonus points be creating  a new application
+that interacts with the existing one. The new application should populate the database with data from
+a file located in a blob store.
 
 Here are the guidelines for the application:
 
