@@ -105,8 +105,7 @@ spec:
       app: webapp
   serviceName: webapp
   template:
-    metadata:
-      annotations:
+    metadata:    
       labels:
         app: webapp
     spec:
