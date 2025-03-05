@@ -174,6 +174,17 @@ resource "aws_eks_cluster" "interview_eks" {
     aws_iam_role_policy_attachment.AmazonEKSVPCResourceController
   ]
 }
+resource "kubernetes_secret" "postgres_password" {
+  metadata {
+    name = "postgres-passwords"
+  }
+
+  data = {
+    postgres = "MySecurePassword"
+  }
+
+  type = "Opaque"
+}
 
 # Worker Nodes IAM Role
 resource "aws_iam_role" "node" {
