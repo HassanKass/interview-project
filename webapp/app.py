@@ -6,6 +6,7 @@ import psycopg2
 import os
 import time
 
+
 while True:
     try:
         conn = psycopg2.connect(database="postgresdb", user="postgres", password=os.environ.get("POSTGRES_PASSWORD"), host="postgres", port="5432")

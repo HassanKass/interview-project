@@ -1,5 +1,5 @@
 provider "aws" {
-  region  = "us-east-2"
+  region = "us-east-2"
 }
 
 data "aws_availability_zones" "available" {
@@ -14,7 +14,7 @@ resource "aws_vpc" "interview_vpc" {
   enable_dns_support   = true
 
   tags = {
-    Name = "interview_vpc"
+    Name                                  = "interview_vpc"
     "kubernetes.io/cluster/interview_eks" = "shared"
   }
 }
@@ -29,9 +29,9 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name                                   = "interview_public_subnet"
-    "kubernetes.io/cluster/interview_eks"  = "shared"
-    "kubernetes.io/role/elb"               = 1
+    Name                                  = "interview_public_subnet"
+    "kubernetes.io/cluster/interview_eks" = "shared"
+    "kubernetes.io/role/elb"              = 1
   }
 }
 
@@ -39,15 +39,15 @@ resource "aws_subnet" "public" {
 resource "aws_subnet" "private" {
   count = var.availability_zones_count
 
-  vpc_id            = aws_vpc.interview_vpc.id
-  cidr_block        = cidrsubnet(var.vpc_cidr, var.subnet_cidr_bits, count.index + var.availability_zones_count)
-  availability_zone = data.aws_availability_zones.available.names[count.index]
+  vpc_id                  = aws_vpc.interview_vpc.id
+  cidr_block              = cidrsubnet(var.vpc_cidr, var.subnet_cidr_bits, count.index + var.availability_zones_count)
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = false
 
   tags = {
-    Name                                   = "interview_private_subnet"
-    "kubernetes.io/cluster/interview_eks"  = "shared"
-    "kubernetes.io/role/internal-elb"      = 1
+    Name                                  = "interview_private_subnet"
+    "kubernetes.io/cluster/interview_eks" = "shared"
+    "kubernetes.io/role/internal-elb"     = 1
   }
 }
 
@@ -210,6 +210,10 @@ resource "aws_iam_role_policy_attachment" "AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
   role       = aws_iam_role.node.name
 }
+resource "aws_iam_role_policy_attachment" "AmazonEBSCSIDriverPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  role       = aws_iam_role.node.name
+}
 
 # Worker Nodes - On-Demand Instances
 resource "aws_eks_node_group" "interview_nodes" {
@@ -223,8 +227,8 @@ resource "aws_eks_node_group" "interview_nodes" {
     min_size     = 1
   }
 
-  instance_types = ["t3.micro"] # Smallest instance for free tier
-  capacity_type  = "ON_DEMAND"  # Ensure it's not using Spot Instances
+  instance_types = ["t3.medium"]
+  capacity_type  = "ON_DEMAND"
   disk_size      = 20
 
   tags = {
