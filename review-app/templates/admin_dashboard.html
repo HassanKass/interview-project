@@ -1,75 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Panel</title>
+    <title>Admin Panel - CSV Upload</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 40px; }
-        .container { max-width: 600px; margin: auto; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 5px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #007bff; color: white; }
-        button { padding: 5px; border: none; cursor: pointer; }
-        .done { background-color: green; color: white; }
-        .working { background-color: orange; color: white; }
-        .upload { background-color: blue; color: white; }
+        .container { max-width: 500px; margin: auto; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 5px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; }
+        input { width: 100%; padding: 8px; margin-top: 5px; }
+        button { background-color: #007bff; color: white; padding: 10px; border: none; cursor: pointer; width: 100%; }
+        button:hover { background-color: #0056b3; }
+        .error { color: red; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Flagged Reviews</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Product</th>
-                <th>Review</th>
-                <th>User Email</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody id="review-table"></tbody>
-    </table>
-
-    <h3>Upload CSV (Update Company & Product List)</h3>
-    <input type="file" id="csv-upload">
-    <button class="upload" onclick="uploadCSV()">Upload</button>
+    <h2>Upload CSV File</h2>
+    <form id="upload-form">
+        <div class="form-group">
+            <label for="csv-upload">Select CSV File:</label>
+            <input type="file" id="csv-upload" required>
+        </div>
+        <button type="submit">Upload</button>
+        <div id="error-message" class="error"></div>
+    </form>
 </div>
 
 <script>
-    async function loadReviews() {
-        const response = await fetch('/flagged-reviews');
-        const reviews = await response.json();
-        const table = document.getElementById('review-table');
-        table.innerHTML = "";
-        reviews.forEach(review => {
-            const row = `<tr>
-                <td>${review.user_name}</td>
-                <td>${review.product}</td>
-                <td>${review.review_text}</td>
-                <td>${review.email}</td>
-                <td>
-                    <button class="done">Done</button>
-                    <button class="working">Working On</button>
-                </td>
-            </tr>`;
-            table.innerHTML += row;
-        });
-    }
+    document.getElementById('upload-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const fileInput = document.getElementById('csv-upload');
+        const errorMessage = document.getElementById('error-message');
 
-    async function uploadCSV() {
-        const file = document.getElementById('csv-upload').files[0];
+        if (!fileInput.files.length) {
+            errorMessage.textContent = "Please select a file to upload.";
+            return;
+        }
+
+        const file = fileInput.files[0];
         const formData = new FormData();
         formData.append('file', file);
 
-        await fetch('/upload-csv', {
-            method: 'POST',
-            body: formData
-        });
-        alert("CSV uploaded successfully!");
-    }
+        try {
+            const response = await fetch('/upload-csv', {
+                method: 'POST',
+                body: formData
+            });
 
-    loadReviews();
+            const result = await response.json();
+
+            if (response.ok) {
+                alert("CSV uploaded successfully!");
+                errorMessage.textContent = "";
+            } else {
+                errorMessage.textContent = result.error || "Failed to upload file.";
+            }
+        } catch (error) {
+            errorMessage.textContent = "An error occurred while uploading the file.";
+        }
+    });
 </script>
 
 </body>

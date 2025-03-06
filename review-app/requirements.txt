@@ -6,3 +6,5 @@ openai
 boto3  
 requests  
 minio
+pandas
+jsons
