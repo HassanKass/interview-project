@@ -121,7 +121,7 @@ def upload_csv():
         return jsonify({"error": "No selected file"}), 400
 
     file_path = f"/tmp/{file.filename}"
-    file.save(file_path)  # Save locally before upload
+    file.save(file_path)  
 
     print(f"🔍 Checking local file: {file_path}")
     if not os.path.exists(file_path):
@@ -147,7 +147,7 @@ def sync_csv_to_db(file_name):
         minio_client.fget_object(BUCKET_NAME, file_name, file_path)
         df = pd.read_csv(file_path)
 
-        # ✅ If CSV contains 'ts' and 'value', store it in 'time_series_data' table
+        #  If CSV contains 'ts' and 'value', store it in 'time_series_data' table
         if "ts" in df.columns and "value" in df.columns:
             table_name = "time_series_data"
             cur.execute(f"""
