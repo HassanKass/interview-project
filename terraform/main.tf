@@ -183,9 +183,11 @@ resource "kubernetes_secret" "postgres_password" {
     postgres = "MySecurePassword"
   }
 
-  type = "Opaque"
+  type       = "Opaque"
+  lifecycle {
+    ignore_changes = [data]  # Prevent Terraform from overwriting existing secrets
+  }
 }
-
 # Worker Nodes IAM Role
 resource "aws_iam_role" "node" {
   name = "interview_eks_node_role"
@@ -247,4 +249,21 @@ resource "aws_eks_node_group" "interview_nodes" {
   }
 
   depends_on = [aws_iam_role.node]
+}
+
+data "aws_eks_cluster_auth" "interview_eks" {
+  name = aws_eks_cluster.interview_eks.name
+}
+provider "kubernetes" {
+  host                   = aws_eks_cluster.interview_eks.endpoint
+  token                  = data.aws_eks_cluster_auth.interview_eks.token
+  cluster_ca_certificate = base64decode(aws_eks_cluster.interview_eks.certificate_authority[0].data)
+}
+
+
+# Create a Separate Namespace for the Bonus Feature
+resource "kubernetes_namespace" "review_system" {
+  metadata {
+    name = "review-system-namespace"
+  }
 }

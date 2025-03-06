@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; margin: auto; padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #007bff; color: white; }
+        button { padding: 5px; border: none; cursor: pointer; }
+        .done { background-color: green; color: white; }
+        .working { background-color: orange; color: white; }
+        .upload { background-color: blue; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Flagged Reviews</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Product</th>
+                <th>Review</th>
+                <th>User Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="review-table"></tbody>
+    </table>
+
+    <h3>Upload CSV (Update Company & Product List)</h3>
+    <input type="file" id="csv-upload">
+    <button class="upload" onclick="uploadCSV()">Upload</button>
+</div>
+
+<script>
+    async function loadReviews() {
+        const response = await fetch('/flagged-reviews');
+        const reviews = await response.json();
+        const table = document.getElementById('review-table');
+        table.innerHTML = "";
+        reviews.forEach(review => {
+            const row = `<tr>
+                <td>${review.user_name}</td>
+                <td>${review.product}</td>
+                <td>${review.review_text}</td>
+                <td>${review.email}</td>
+                <td>
+                    <button class="done">Done</button>
+                    <button class="working">Working On</button>
+                </td>
+            </tr>`;
+            table.innerHTML += row;
+        });
+    }
+
+    async function uploadCSV() {
+        const file = document.getElementById('csv-upload').files[0];
+        const formData = new FormData();
+        formData.append('file', file);
+
+        await fetch('/upload-csv', {
+            method: 'POST',
+            body: formData
+        });
+        alert("CSV uploaded successfully!");
+    }
+
+    loadReviews();
+</script>
+
+</body>
+</html>
