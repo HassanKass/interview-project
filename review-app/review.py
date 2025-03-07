@@ -123,7 +123,7 @@ def upload_csv():
     file_path = f"/tmp/{file.filename}"
     file.save(file_path)  
 
-    print(f"🔍 Checking local file: {file_path}")
+    print(f" Checking local file: {file_path}")
     if not os.path.exists(file_path):
         print(f"⚠️ Local file {file_path} does not exist.")
         return jsonify({"error": "File not found after saving locally"}), 500
@@ -139,6 +139,17 @@ def upload_csv():
     except S3Error as e:
         print(f"⚠️ MinIO Upload Error: {e}")
         return jsonify({"error": "An error occurred while uploading the file"}), 500
+    
+def log_to_cloudwatch(metric_name, value):
+    """Sends custom metrics to AWS CloudWatch"""
+    try:
+        cloudwatch_client.put_metric_data(
+            Namespace="CSVProcessing",
+            MetricData=[{"MetricName": metric_name, "Value": value, "Unit": "Count"}]
+        )
+        print(f"✅ CloudWatch Metric Sent: {metric_name} = {value}")
+    except Exception as e:
+        print(f"⚠️ CloudWatch Error: {e}")    
 
 def sync_csv_to_db(file_name):
     """Fetches a CSV from MinIO, processes it, and stores it in PostgreSQL without duplicates"""
@@ -180,15 +191,21 @@ def sync_csv_to_db(file_name):
                     cur.execute(f"INSERT INTO {table_name} (company, product, upload_timestamp) VALUES (%s, %s, %s);", (row['company'], row['product'], datetime.datetime.now()))
                     count += 1
             conn.commit()
+
+            log_to_cloudwatch("RowsInserted", count)
+            log_to_cloudwatch("FilesProcessed", 1)
+
+            print(f"✅ {file_name} processed and stored in {table_name}, inserting {count} rows.")
     except Exception as e:
         print(f"⚠️ Error syncing CSV to database: {e}")
         conn.rollback()
+#get data ti the form.html        
 @app.route("/get-data", methods=["GET"])
 def get_data():
     """Fetches all uploaded CSV data from the database"""
     try:
         table_name = "uploaded_data"
-        print(f"🔍 Fetching data from table: {table_name}")
+        print(f" Fetching data from table: {table_name}")
 
         cur.execute(f"SELECT * FROM {table_name};")
         rows = cur.fetchall()
@@ -216,7 +233,7 @@ def monitor_minio():
             for obj in objects:
                 file_name = obj.object_name
                 if file_name not in processed_files:
-                    print(f"📂 New file detected: {file_name}. Processing...")
+                    print(f" New file detected: {file_name}. Processing...")
                     sync_csv_to_db(file_name)
                     processed_files.add(file_name)
             time.sleep(10)
